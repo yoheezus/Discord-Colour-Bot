@@ -43,7 +43,7 @@ async def nickcolour(ctx, value: discord.Colour):
             await bot.say('Colourbot cannot create/edit roles.')
 
 @commands.command()
-async def uptime(self):
+async def uptime():
     await bot.say('{}'.format(datetime.datetime.utcnow() - bot.uptime))
     
 try:
