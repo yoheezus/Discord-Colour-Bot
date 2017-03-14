@@ -49,7 +49,7 @@ async def currentcolour(ctx):
     rolecolour = userauthor.colour
     await bot.reply('current colour is: {0}'.format(rolecolour))
     
-@commands.command()
+@bot.command()
 async def uptime():
     await bot.say('{}'.format(datetime.datetime.utcnow() - bot.uptime))
     
