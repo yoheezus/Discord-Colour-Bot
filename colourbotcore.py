@@ -41,7 +41,13 @@ async def nickcolour(ctx, value: discord.Colour):
             await bot.edit_role(dserver, role, colour=value)
         except PermissionError:
             await bot.say('Colourbot cannot create/edit roles.')
-
+            
+@bot.command(aliases=['cc'], pass_context=True)
+async def currentcolour(ctx):
+    userauthor = ctx.message.author
+    rolecolour = userauthor.colour
+    await bot.reply('current colour is: {0}'.format(rolecolour))
+    
 @commands.command()
 async def uptime():
     await bot.say('{}'.format(datetime.datetime.utcnow() - bot.uptime))
