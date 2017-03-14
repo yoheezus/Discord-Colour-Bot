@@ -1,5 +1,6 @@
 import json
 import discord
+import datetime
 from discord.ext import commands
 
 description = '''A bot that allows users to choose their own name colour through use of a custom role based on id.'''
