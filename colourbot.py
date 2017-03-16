@@ -5,7 +5,7 @@ from discord.ext import commands
 import asyncio
 
 
-description = '''A bot for testing purposes'''
+description = '''A bot that allows users to choose their own name colour through use of a custom role based on id.'''
 
 
 bot = commands.Bot(command_prefix='?', description=description)
