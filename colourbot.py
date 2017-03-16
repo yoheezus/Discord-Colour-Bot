@@ -157,7 +157,7 @@ async def displayperms(ctx):
         await bot.delete_message(msg)
 
 try:
-    bot.run('MTg1ODEyNzIwMzY3NDM1Nzc2.CjBf_A.EADPXn9Xqadq33JEdnCJJQxIbi0')
+    bot.run('TOKEN')
 except KeyboardInterrupt:
     bot.stop()
 finally:
