@@ -1,8 +1,8 @@
 import json
 import discord
 import datetime
-from discord.ext import commands
 import asyncio
+from discord.ext import commands
 
 
 description = '''A bot that allows users to change their own name colours.coloubot
@@ -171,7 +171,7 @@ async def removeperm(ctx, perm: str):
         with open('serverlist.json', 'w') as f:
             json.dump(data, f)
 
-
+            
 @bot.command(pass_context=True)
 async def displayperms(ctx):
     """Shows the roles that a User has to be in order to change their name colour.\n
@@ -179,21 +179,22 @@ async def displayperms(ctx):
     data = loadjson()
     server = ctx.message.server.id
     serv_perms = data['Servers'][server]['Perms']
-    if isinstance(serv_perms, list) and len(serv_perms) == 1:
-        await bot.say(serv_perms[0])
-    elif isinstance(serv_perms, list) and len(serv_perms) > 1:
-        toprint = ', '.join(serv_perms)
-        msg = await bot.say("You need to be any of these: {}".format(toprint))
-        await asyncio.sleep(5)
-        await bot.delete_message(msg)
-    elif isinstance(serv_perms, list) and len(serv_perms) == 0:
-        msg = await bot.say("No roles needed!")
-        await asyncio.sleep(5)
-        await bot.delete_message(msg)
-    else:
-        msg = await bot.say("You need to be: {}".format(serv_perms))
-        await asyncio.sleep(5)
-        await bot.delete_message(msg)
+    if isinstance(serv_perms, list):
+        if and len(serv_perms) == 1:
+            await bot.say(serv_perms[0])
+        elif len(serv_perms) > 1:
+            toprint = ', '.join(serv_perms)
+            msg = await bot.say("You need to be any of these: {}".format(toprint))
+            await asyncio.sleep(5)
+            await bot.delete_message(msg)
+        elif len(serv_perms) == 0:
+            msg = await bot.say("No roles needed!")
+            await asyncio.sleep(5)
+            await bot.delete_message(msg)
+        else:
+            msg = await bot.say("You need to be: {}".format(serv_perms))
+            await asyncio.sleep(5)
+            await bot.delete_message(msg)
 
 
 def load_credentials():
