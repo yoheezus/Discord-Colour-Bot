@@ -94,7 +94,7 @@ async def currentcolour(ctx):
                           description='Your current colour is: **{}**, {}'.format(
                               str(rolecolour), userauthor.name), colour=rolecolour)
     embed.set_thumbnail(url='https://www.beautycolorcode.com/{}.png'.format(str(rolecolour)[1:]))
-    await bot.reply(content='', embed=embed)
+    await bot.say(content='', embed=embed)
 
 
 @commands.check(server_check)
@@ -122,9 +122,7 @@ async def nickcolour(ctx, value: discord.Colour):
             role = discord.utils.get(dserver.roles, name="ColourID" + userauthor)
             await bot.add_roles(ctx.message.author, role)
             await bot.edit_role(dserver, role, colour=value)
-            msg = await bot.say(embed=embed)
-            await asyncio.sleep(10)
-            await bot.delete_message(msg)
+            await bot.say(embed=embed, delete_after=10)
         except PermissionError:
             await bot.say("Couldnt not complete command")
 
@@ -184,17 +182,11 @@ async def displayperms(ctx):
             await bot.say(serv_perms[0])
         elif len(serv_perms) > 1:
             toprint = ', '.join(serv_perms)
-            msg = await bot.say("You need to be any of these: {}".format(toprint))
-            await asyncio.sleep(5)
-            await bot.delete_message(msg)
+            await bot.say("You need to be any of these: {}".format(toprint), delete_after=5)
         elif len(serv_perms) == 0:
-            msg = await bot.say("No roles needed!")
-            await asyncio.sleep(5)
-            await bot.delete_message(msg)
+            await bot.say("No roles needed!", delete_after=5)
         else:
-            msg = await bot.say("You need to be: {}".format(serv_perms))
-            await asyncio.sleep(5)
-            await bot.delete_message(msg)
+            await bot.say("You need to be: {}".format(serv_perms), delete_after=5)
 
 
 def load_credentials():
