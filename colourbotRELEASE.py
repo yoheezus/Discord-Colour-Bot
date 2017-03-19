@@ -13,7 +13,6 @@ custom colour.'''
 
 bot = commands.Bot(command_prefix='?', description=description)
 
-
 @bot.event
 async def on_server_join(server):
     data = loadjson()
@@ -112,9 +111,7 @@ async def nickcolour(ctx, value: discord.Colour):
         try:
             role = await bot.create_role(dserver, name="ColourID" + userauthor, colour=value)
             await bot.add_roles(ctx.message.author, role)
-            msg = bot.say(embed=embed)
-            await asyncio.sleep(10)
-            await bot.delete_message(msg)
+            await bot.say(embed=embed, delete_after=10)
         except PermissionError:
             await bot.say('Colourbot cannot create/edit roles.')
     else:
