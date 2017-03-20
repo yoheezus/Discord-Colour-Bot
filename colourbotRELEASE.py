@@ -175,7 +175,7 @@ async def displayperms(ctx):
     server = ctx.message.server.id
     serv_perms = data['Servers'][server]['Perms']
     if isinstance(serv_perms, list):
-        if and len(serv_perms) == 1:
+        if len(serv_perms) == 1:
             await bot.say(serv_perms[0])
         elif len(serv_perms) > 1:
             toprint = ', '.join(serv_perms)
