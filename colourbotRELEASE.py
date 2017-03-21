@@ -13,6 +13,7 @@ custom colour.'''
 
 bot = commands.Bot(command_prefix='?', description=description)
 
+
 @bot.event
 async def on_server_join(server):
     data = loadjson()
@@ -23,9 +24,18 @@ async def on_server_join(server):
 
 
 @bot.event
+async def on_member_remove(member):
+    server = member.server
+    role = discord.utils.get(server.roles, name="ColourID" + member.id)
+    await bot.delete_role(server, role)
+
+
+@bot.event
 async def on_command_error(error, ctx):
     if isinstance(error, commands.errors.CheckFailure):
         await bot.send_message(ctx.message.author, "Missing required permissions.")
+    else:
+        print(error)
 
 
 @bot.event
@@ -126,6 +136,26 @@ async def nickcolour(ctx, value: discord.Colour):
 
 @commands.has_permissions(manage_roles=True)
 @bot.command(pass_context=True)
+async def cleanup(ctx):
+    server = ctx.message.server
+    roles = server.roles
+    members = server.members
+    colrole = set([role for role in roles if "ColourID" in role.name])
+    members_list = [member for member in members]
+    members_roles = []
+    for member in members_list:
+        for roles in member.roles:
+            members_roles.append(roles)
+    colour_roles_used = set([role for role in members_roles if "ColourID" in role.name])
+    colour_roles_unused = colrole - colour_roles_used
+    for role in colour_roles_unused:
+        print("{} deleted.".format(role.name))
+        await bot.delete_role(server, role)
+    await bot.say("Deleted {} roles.".format(len(colour_roles_unused)))
+
+
+@commands.has_permissions(manage_roles=True)
+@bot.command(pass_context=True)
 async def addperm(ctx, perm: str):
     """Used to add a role to the whitelist of roles.\n
     usage: ?addperm [role name]"""
@@ -154,19 +184,17 @@ async def removeperm(ctx, perm: str):
     """Removes a role from the list of required roles.\n
     usage: ?removeperm [name of role]."""
     server = ctx.message.server.id
-    role = discord.utils.get(ctx.message.server.roles, name=perm)
-    if role:
-        data = loadjson()
-        serv = data['Servers']
-        if server in serv:
-            if isinstance(serv[server]['Perms'], list):
-                serv[server]['Perms'].remove(role.name)
-            else:
-                serv[server]['Perms'] = None
+    data = loadjson()
+    serv = data['Servers']
+    if server in serv:
+        if isinstance(serv[server]['Perms'], list):
+            serv[server]['Perms'].remove(perm)
+        else:
+            serv[server]['Perms'] = None
         with open('serverlist.json', 'w') as f:
             json.dump(data, f)
 
-            
+
 @bot.command(pass_context=True)
 async def displayperms(ctx):
     """Shows the roles that a User has to be in order to change their name colour.\n
@@ -184,6 +212,22 @@ async def displayperms(ctx):
             await bot.say("No roles needed!", delete_after=5)
         else:
             await bot.say("You need to be: {}".format(serv_perms), delete_after=5)
+
+
+@bot.command(pass_context=True)
+async def scheck(ctx):
+    """ Checks if the server is added to the Server list.\n
+    Usage: ?scheck"""
+    server = ctx.message.server
+    data = loadjson()
+    try:
+        await bot.say("Server is already added.", delete_after=5)
+    except KeyError:
+        perms = {"Perms": []}
+        data["Servers"][server.id] = perms
+        await bot.say("Added server {} to Server list".format(server.name), delete_after=5)
+        with open('serverlist.json', 'w') as f:
+            json.dump(data, f)
 
 
 def load_credentials():
